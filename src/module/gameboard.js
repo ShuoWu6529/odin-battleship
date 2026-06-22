@@ -41,13 +41,13 @@ class GameBoard {
 
   receiveAttack(location) {
     if (location < 0 || location >= 100) {
-      return false;
+      return null;
     }
 
     const cell = this.board[location];
 
     if (cell.isHit) {
-      return false;
+      return null;
     }
 
     cell.isHit = true;

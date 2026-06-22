@@ -1,5 +1,7 @@
 import "./styles.css";
-import { testing } from "./export-template.js";
+import { Ship } from "./module/ship.js";
+import { GameBoard } from "./module/gameboard.js";
+import { Player } from "./module/player.js";
 
 /**
  * npx eslint dir/file.js

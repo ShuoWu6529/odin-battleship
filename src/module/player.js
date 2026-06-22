@@ -1,8 +1,8 @@
 import { GameBoard } from "./gameboard.js";
 
 class Player {
-  constructor(board) {
-    this.board = board;
+  constructor() {
+    this.board = new GameBoard();
   }
 }
 

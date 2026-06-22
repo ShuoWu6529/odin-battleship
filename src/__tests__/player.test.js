@@ -1,11 +1,8 @@
 import { Player } from "../module/player.js";
-import { GameBoard } from "../module/gameboard.js";
 
 let player;
-let board;
 beforeEach(() => {
-  board = new GameBoard();
-  player = new Player(board);
+  player = new Player();
 });
 
 test("Check player exists", () => {
@@ -13,5 +10,5 @@ test("Check player exists", () => {
 });
 
 test("Check player board", () => {
-  expect(player.board).toBe(board);
+  expect(player.board).toBeDefined();
 });

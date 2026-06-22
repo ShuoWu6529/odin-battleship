@@ -69,5 +69,5 @@ test("Check all ship is sunk", () => {
 test("Collision checking", () => {
   const newShip = new Ship(3);
   gameboard.placeShip(ship, 2, 0);
-  expect(gameboard.placeShip(newShip, 1, 0)).toBeFalsy();
+  expect(gameboard.placeShip(newShip, 1, 0)).toBeUndefined();
 });
