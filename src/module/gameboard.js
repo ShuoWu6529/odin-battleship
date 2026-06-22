@@ -17,8 +17,8 @@ class GameBoard {
     const length = ship.length;
     const step = axis ? 10 : 1;
     for (let i = 0; i < length; i++) {
-      coordinate = location + i * step;
-      cell = this.board[coordinate];
+      let coordinate = location + i * step;
+      let cell = this.board[coordinate];
       cell.hasShip = true;
       cell.shipObj = ship;
     }
@@ -30,8 +30,8 @@ class GameBoard {
     const length = ship.length;
     const step = axis ? 10 : 1;
     for (let i = 0; i < length; i++) {
-      coordinate = location + i * step;
-      cell = this.board[coordinate];
+      let coordinate = location + i * step;
+      let cell = this.board[coordinate];
       if (cell.hasShip) {
         return true;
       }
@@ -44,7 +44,7 @@ class GameBoard {
       return false;
     }
 
-    cell = this.board[location];
+    const cell = this.board[location];
 
     if (cell.isHit) {
       return false;

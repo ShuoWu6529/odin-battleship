@@ -23,5 +23,19 @@ export default defineConfig([
       "no-unused-vars": "warn",
       "no-undef": "warn",
     },
+    files: ["**/*.test.js", "**/*.spec.js", "**/__tests__/**/*.js"],
+    languageOptions: {
+      globals: {
+        describe: "readonly",
+        test: "readonly",
+        it: "readonly",
+        expect: "readonly",
+        beforeEach: "readonly",
+        afterEach: "readonly",
+        beforeAll: "readonly",
+        afterAll: "readonly",
+        jest: "readonly",
+      },
+    },
   },
 ]);
