@@ -11,7 +11,7 @@ class GameBoard {
   }
 
   placeShip(ship, location, axis) {
-    if (this.checkCollision(ship, location, axis)) {
+    if (!this.isLegalPlacement(ship, location, axis)) {
       return false;
     }
     const length = ship.length;
@@ -26,17 +26,30 @@ class GameBoard {
     return true;
   }
 
-  checkCollision(ship, location, axis) {
+  isLegalPlacement(ship, location, axis) {
+    if (location < 0 || location >= 100) {
+      return false;
+    }
     const length = ship.length;
+    if (axis) {
+      // vertical: the last cell must stay on the board
+      if (location + (length - 1) * 10 >= 100) {
+        return false;
+      }
+    } else {
+      // horizontal: the ship must not cross the right edge into another row
+      if ((location % 10) + (length - 1) > 9) {
+        return false;
+      }
+    }
     const step = axis ? 10 : 1;
     for (let i = 0; i < length; i++) {
       let coordinate = location + i * step;
-      let cell = this.board[coordinate];
-      if (cell.hasShip) {
-        return true;
+      if (this.board[coordinate].hasShip) {
+        return false;
       }
     }
-    return false;
+    return true;
   }
 
   receiveAttack(location) {
@@ -59,12 +72,19 @@ class GameBoard {
     return true;
   }
 
+  isAttacked(location) {
+    if (location < 0 || location >= 100) {
+      return true;
+    }
+    return this.board[location].isHit;
+  }
+
   isAllSunk() {
-    this.ships.forEach((ship) => {
+    for (const ship of this.ships) {
       if (!ship.isSunk()) {
         return false;
       }
-    });
+    }
     return true;
   }
 }

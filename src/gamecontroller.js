@@ -1,16 +1,21 @@
 import { Ship } from "./module/ship.js";
-import { GameBoard } from "./module/gameboard.js";
 import { Player } from "./module/player.js";
+
+const SHIP_LENGTHS = [5, 4, 3, 3, 2];
 
 class GameController {
   constructor() {
-    real = new Player();
-    bot = new Player();
-    this.placeShips(real);
-    this.placeShips(bot);
-    this.players = [real, bot];
-    this.activePlayer = players[0];
+    this.players = [new Player(), new Player()];
+    this.activePlayer = this.players[0];
     this.gameOver = false;
+  }
+
+  getHuman() {
+    return this.players[0];
+  }
+
+  getBot() {
+    return this.players[1];
   }
 
   getActivePlayer() {
@@ -18,24 +23,27 @@ class GameController {
   }
 
   getInactivePlayer() {
-    return this.activePlayer === players[0] ? players[1] : players[0];
+    return this.activePlayer === this.players[0]
+      ? this.players[1]
+      : this.players[0];
   }
 
   switchTurn() {
-    this.activePlayer =
-      this.activePlayer === players[0] ? players[1] : players[0];
+    this.activePlayer = this.getInactivePlayer();
   }
 
-  placeShips(player) {
-    const ships = [
-      new Ship(5),
-      new Ship(4),
-      new Ship(3),
-      new Ship(3),
-      new Ship(2),
-    ];
-    ships.forEach((ship, i) => {
-      player.board.placeShip(ship, i, 0);
+  getShipLengths() {
+    return SHIP_LENGTHS;
+  }
+
+  placeShipsRandomly(player) {
+    SHIP_LENGTHS.forEach((length) => {
+      let placed = false;
+      while (!placed) {
+        const location = Math.floor(Math.random() * 100);
+        const axis = Math.random() < 0.5 ? 0 : 1;
+        placed = player.board.placeShip(new Ship(length), location, axis);
+      }
     });
   }
 
@@ -44,15 +52,15 @@ class GameController {
   }
 
   getWinner() {
-    if (!gameOver) return null;
-    if (computer.gameboard.allShipsSunk()) return this.players[0];
-    if (human.gameboard.allShipsSunk()) return this.players[1];
+    if (!this.gameOver) return null;
+    if (this.players[1].board.isAllSunk()) return this.players[0];
+    if (this.players[0].board.isAllSunk()) return this.players[1];
     return null;
   }
 
   playRound(location) {
     const opponent = this.getInactivePlayer();
-    attackRes = opponent.board.receiveAttack(location);
+    const attackRes = opponent.board.receiveAttack(location);
 
     if (attackRes === null) {
       return false;
@@ -64,33 +72,24 @@ class GameController {
     }
 
     this.switchTurn();
-
-    if (this.activePlayer === this.players[1]) {
-      this.computerMove();
-    }
     return true;
   }
 
   computerMove() {
-    const opponent = getInactivePlayer();
+    const opponent = this.getInactivePlayer();
+    let location;
     do {
       location = Math.floor(Math.random() * 100);
-    } while (opponent.board.receiveAttack(location) !== null);
+    } while (opponent.board.isAttacked(location));
 
-    if (opponent.gameboard.allShipsSunk()) {
-      gameOver = true;
+    opponent.board.receiveAttack(location);
+
+    if (opponent.board.isAllSunk()) {
+      this.gameOver = true;
       return;
     }
-    switchPlayerTurn();
-  }
-
-  getHuman() {
-    return this.players[0];
-  }
-
-  getBot() {
-    return this.players[1];
+    this.switchTurn();
   }
 }
 
-export { GameController }
+export { GameController };
